@@ -1,0 +1,49 @@
+# Arduino build files
+*.elf
+*.hex
+*.bin
+*.eep
+*.map
+*.d
+*.dep
+*.o
+*.a
+
+# Arduino IDE specific
+.build/
+*.ino.cpp
+*.ino.*
+*.out
+
+# macOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux specific
+*~
+
+# VS Code / PlatformIO
+.vscode/
+.pio/
+*.pyc
+__pycache__/
+
+# Arduino CLI cache
+.arduino/
+.arduinoIDE/
+
+# Backup files
+*.bak
+*.tmp
+*.swp
+
+# Logs
+*.log
+
+# Compiled libraries
+libraries/**/build/
+libraries/**/examples/**/build/
