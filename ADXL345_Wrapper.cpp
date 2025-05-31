@@ -1,6 +1,8 @@
 #include "ADXL345_Wrapper.hpp"
 
-ADXL345_Wrapper::ADXL345_Wrapper() : accel(12345){}
+ADXL345_Wrapper::ADXL345_Wrapper() : accel(12345),millisecondsPoll(250){}
+
+ADXL345_Wrapper::ADXL345_Wrapper(int _millisecondsPoll) : accel(12345), millisecondsPoll(_millisecondsPoll){}
 
 void ADXL345_Wrapper::init() {
 
@@ -78,10 +80,53 @@ void ADXL345_Wrapper::displayDataRate() {
 
 void ADXL345_Wrapper::displayAcceleration(void){
  sensors_event_t event; 
- accel.getEvent(&event); 
+ accel.getEvent(&event);
+
+  Vector3 rawValues = Vector3(
+    abs(event.acceleration.x), 
+    abs(event.acceleration.y), 
+    abs(event.acceleration.z-GravityToMS2));
+  
+  Vector3 gValues = Vector3(
+    rawValues.x * MS2ToGravityMult,
+    rawValues.y * MS2ToGravityMult,
+    rawValues.z * MS2ToGravityMult);
+
+  // if(xRaw > xHigh)
+  //   xHigh = xRaw;
+
+  //  if(yRaw > yHigh)
+  //   yHigh = yRaw;
+
+  // if(zRaw > zHigh)
+  //   zHigh = zRaw;
+
  //Output in m/sec^2) 
- Serial.print("X: "); Serial.print(event.acceleration.x); Serial.print(" "); 
- Serial.print("Y: "); Serial.print(event.acceleration.y); Serial.print(" "); 
- Serial.print (": "); Serial.print(event.acceleration.z); Serial.print(" ");Serial.println("m/s^2 "); 
- delay(500); 
+//  Serial.print("X: "); Serial.print(xRaw); Serial.print(" "); 
+//  Serial.print("Y: "); Serial.print(yRaw); Serial.print(" "); 
+//  Serial.print ("Z: "); Serial.print(zRaw); Serial.print(" ");
+//  Serial.print("m/s^2 "); 
+
+//  Serial.print("gX: "); Serial.print(xG); Serial.print(" "); 
+//  Serial.print("gY: "); Serial.print(yG); Serial.print(" "); 
+//  Serial.print ("gZ: "); Serial.print(zG); Serial.print(" ");
+//  Serial.print("Gs "); 
+
+//  Serial.print("xHigh: "); Serial.print(xHigh);Serial.print(" "); 
+//  Serial.print("yHigh: "); Serial.print(yHigh);Serial.print(" "); 
+//  Serial.print("zHigh: "); Serial.print(zHigh);Serial.print(" "); 
+
+float totalG = gValues.magnitude();
+
+Serial.print("Total G: "); Serial.print(totalG); Serial.print(" "); 
+
+  if(totalG > highestG){
+    highestG = totalG;
+  }
+
+Serial.print("Highest G: "); Serial.print(highestG); Serial.print(" "); 
+
+ Serial.println(""); 
+
+ delay(millisecondsPoll); 
 }
