@@ -14,13 +14,11 @@ void ADXL345_Wrapper::init() {
 
  //Select the range 
  //accel.setRange(ADXL345_RANGE_16_G); 
-  accel.setRange(ADXL345_RANGE_8_G); 
+  // accel.setRange(ADXL345_RANGE_8_G); 
  // accel.setRange(ADXL345_RANGE_4_G); 
- // accel.setRange(ADXL345_RANGE_2_G); 
+ accel.setRange(ADXL345_RANGE_2_G); 
  
  delay(1000); //needed to let it init
-
-
 }
 
 void ADXL345_Wrapper::displayRange() {
@@ -83,5 +81,16 @@ void ADXL345_Wrapper::displayAcceleration(void){
  Serial.print("X: "); Serial.print(event.acceleration.x); Serial.print(" "); 
  Serial.print("Y: "); Serial.print(event.acceleration.y); Serial.print(" "); 
  Serial.print (": "); Serial.print(event.acceleration.z); Serial.print(" ");Serial.println("m/s^2 "); 
- delay(500); 
+}
+
+vec3 ADXL345_Wrapper::retrieveValues(void){
+  sensors_event_t event; 
+  accel.getEvent(&event); 
+  vec3 returnValues;
+
+  returnValues.x = event.acceleration.x;
+  returnValues.y = event.acceleration.y;
+  returnValues.z = event.acceleration.z;
+
+  return returnValues;
 }
