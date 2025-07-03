@@ -4,6 +4,8 @@
 #include <SD.h>
 
 class SDCard_Wrapper{
-  init(int chipSelect);
 
-}
+public:
+  void init(int chipSelect);
+  void writeToSdCard(String filepath, String dataString);
+};

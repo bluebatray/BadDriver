@@ -4,18 +4,27 @@ ADXL345_Wrapper::ADXL345_Wrapper() : accel(12345){}
 
 void ADXL345_Wrapper::init() {
 
- //Initialize the module 
- if(!accel.begin()) 
- { 
+  //Initialize the module 
+  if(!accel.begin()) 
+  { 
   //Connection error 
   Serial.println("failed sensor -- Check connection!"); 
   while(1); 
- } 
+  } 
 
- accel.setRange(ADXL345_RANGE_2_G);   //any more than .5 and it's bad.
- accel.setDataRate(ADXL345_DATARATE_25_HZ) //12-25 should be good
- 
- delay(1000); //needed to let it init
+  accel.setRange(ADXL345_RANGE_2_G);   //any more than .5 and it's bad.
+  accel.setDataRate(ADXL345_DATARATE_25_HZ); //12-25 should be good
+  
+  delay(1000); //needed to let it init
+
+ //create offsets
+  sensors_event_t event; 
+ accel.getEvent(&event);
+
+  VectorOffsets.x = event.acceleration.x;
+  VectorOffsets.y = event.acceleration.y;
+  VectorOffsets.z = event.acceleration.z;
+
 }
 
 void ADXL345_Wrapper::displayRange() {
@@ -85,9 +94,9 @@ vec3 ADXL345_Wrapper::retrieveValues(void){
   accel.getEvent(&event); 
   vec3 returnValues;
 
-  returnValues.x = event.acceleration.x;
-  returnValues.y = event.acceleration.y;
-  returnValues.z = event.acceleration.z;
+  returnValues.x = (event.acceleration.x - VectorOffsets.x) / GravityMS2;
+  returnValues.y = (event.acceleration.y - VectorOffsets.y) / GravityMS2;
+  returnValues.z = (event.acceleration.z - VectorOffsets.z) / GravityMS2;
 
   return returnValues;
 }

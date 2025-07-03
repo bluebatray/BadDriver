@@ -16,7 +16,9 @@ class ADXL345_Wrapper{
 
   Adafruit_ADXL345_Unified accel; 
 
+private:
   float MS2ToGravityMult =  0.10197162129779;  // for example: 9.53 / 9.80665 ≈ 0.972 g
-  float GravityToMS2 = 9.80665;
+  float GravityMS2 = 9.80665;
+  vec3 VectorOffsets;
 
 };

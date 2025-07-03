@@ -30,6 +30,7 @@ D13   SD CARD SCK   Orange
 #include <LiquidCrystal.h>
 
 #include "ADXL345_Wrapper.hpp"
+#include "SDCard_Wrapper.hpp"
 #include "vec3.hpp"
 
 ADXL345_Wrapper accelerometer = ADXL345_Wrapper();
@@ -37,7 +38,7 @@ SDCard_Wrapper sdCard = SDCard_Wrapper();
 //constants
 // 1 g = 9.8 m/s^2
 
-const int chipSelect = 10;
+const int chipSelect = 4; 
 LiquidCrystal lcd(8, 9, 5, 6, 7, 10);
 
 void setup(void) 
@@ -51,34 +52,24 @@ void setup(void)
   lcd.begin(16, 2);
   lcd.print("Hello driver!");
 
-  if (!SD.begin(chipSelect)) {
-    Serial.println("initialization failed. Things to check:");
-    Serial.println("1. is a card inserted?");
-    Serial.println("2. is your wiring correct?");
-    Serial.println("3. did you change the chipSelect pin to match your shield or module?");
-    Serial.println("Note: press reset button on the board and reopen this Serial Monitor after fixing your issue!");
-    while (true);
-  }
-
   Serial.println("initialization done.");
   
   accelerometer.init();
 
-   //Wyświetelnie information 
  accelerometer.displaySensorDetails(); 
- //Show additional settings 
  accelerometer.displayDataRate(); 
  accelerometer.displayRange(); 
 
 } 
 void loop(void) 
 { 
-  accelerometer.displayAcceleration();
+  // accelerometer.displayAcceleration();
 
    // make a string for assembling the data to log:
   vec3 sensorValues = accelerometer.retrieveValues();
 
   String dataString = 
+    
     String(sensorValues.x, 2) + "," + 
     String(sensorValues.y, 2) + "," + 
     String(sensorValues.z, 2);
@@ -86,23 +77,9 @@ void loop(void)
     lcd.setCursor(0, 1);
     lcd.print(dataString);
 
-  // open the file. note that only one file can be open at a time,
-  // so you have to close this one before opening another.
-  File dataFile = SD.open("datalog.txt", FILE_WRITE);
+  sdCard.writeToSdCard("datalog.txt", dataString);
 
-  // if the file is available, write to it:
-  if (dataFile) {
-    dataFile.println(dataString);
-    dataFile.close();
-    // print to the serial port too:
-    Serial.println(dataString);
-  }
-  // if the file isn't open, pop up an error:
-  else {
-    Serial.println("error opening datalog.txt");
-  }
-
-  delay(500);
+  // delay(500);
 
 } 
 
