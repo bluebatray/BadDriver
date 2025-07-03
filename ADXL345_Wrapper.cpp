@@ -12,11 +12,8 @@ void ADXL345_Wrapper::init() {
   while(1); 
  } 
 
- //Select the range 
- //accel.setRange(ADXL345_RANGE_16_G); 
-  // accel.setRange(ADXL345_RANGE_8_G); 
- // accel.setRange(ADXL345_RANGE_4_G); 
- accel.setRange(ADXL345_RANGE_2_G); 
+ accel.setRange(ADXL345_RANGE_2_G);   //any more than .5 and it's bad.
+ accel.setDataRate(ADXL345_DATARATE_25_HZ) //12-25 should be good
  
  delay(1000); //needed to let it init
 }

@@ -33,7 +33,7 @@ D13   SD CARD SCK   Orange
 #include "vec3.hpp"
 
 ADXL345_Wrapper accelerometer = ADXL345_Wrapper();
-
+SDCard_Wrapper sdCard = SDCard_Wrapper();
 //constants
 // 1 g = 9.8 m/s^2
 
@@ -44,8 +44,9 @@ void setup(void)
 { 
 
   Serial.begin(9600); 
-
   while(!Serial);
+
+  sdCard.init(chipSelect);
 
   lcd.begin(16, 2);
   lcd.print("Hello driver!");
